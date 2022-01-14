@@ -14,25 +14,33 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('index');
-})->name('index');
+    return view('catalogo.index');
+})->name('catalogo.index');
 
 Route::get('sobre', function () {
     return view('catalogo.sobre');
 })->name('catalogo.sobre');
 Route::get('produtos', function () {
-    return view('catalogo.produtos');
+    return view('catalogo.products');
 })->name('catalogo.produtos');
+Route::get('promocao', function () {
+    return view('catalogo.promotion');
+})->name('catalogo.promocao');
 Route::get('contato', function () {
     return view('catalogo.contato');
 })->name('catalogo.contato');
 Route::get('categorias', function () {
-    return view('catalogo.categorias');
-})->name('catalogo.carrinho');
+    return view('catalogo.category');
+})->name('catalogo.categorias');
 Route::get('carrinho', function () {
-    return view('catalogo.carrinho');
+    return view('catalogo.cart');
 })->name('catalogo.carrinho');
-
+Route::get('checkout', function () {
+    return view('catalogo.checkout');
+})->name('catalogo.checkout');
+Route::get('produto-detalhe', function () {
+    return view('catalogo.product-detail');
+})->name('catalogo.produto-detalhe');
 
 Auth::routes();
 
