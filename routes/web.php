@@ -1,6 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use \App\Http\Controllers\{
+    CategoriaController,
+    ProdutoController,
+    ProfileController,
+    UserController,
+    HomeController,
+    VendaController,
+    ClienteController,
+    ContatoController
+
+};
+
 
 /*
 |--------------------------------------------------------------------------
@@ -44,13 +56,20 @@ Route::get('produto-detalhe', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->prefix('admin')->group(function () {
     Route::view('about', 'about')->name('about');
 
-    Route::get('users', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
 
-    Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
-    Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::resource('categorias', CategoriaController::class);
+    Route::resource('produtos', ProdutoController::class);
+    Route::get('vendas/abertas', [VendaController::class, 'abertas'])->name('vendas.open');
+    Route::get('vendas/fechadas', [VendaController::class, 'fechadas'])->name('vendas.closed');
+    Route::get('clientes', [ClienteController::class, 'index'])->name('clientes.index');
+    Route::get('contatos', [ContatoController::class, 'index'])->name('contatos.index');
+
 });

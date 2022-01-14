@@ -9,38 +9,37 @@
                     <form action="{{ route('login') }}" method="POST">
                         @csrf
                         <div class="input-group mb-3"><span class="input-group-text">
-                      <svg class="icon">
-                        <use xlink:href="{{ asset('icons/coreui.svg#cil-envelope-open') }}"></use>
-                      </svg></span>
+                                <svg class="icon">
+                                    <use xlink:href="{{ asset('icons/coreui.svg#cil-envelope-open') }}"></use>
+                                </svg></span>
                             <input class="form-control @error('email') is-invalid @enderror" type="text" name="email"
-                                   placeholder="{{ __('Email') }}" required autofocus>
+                                placeholder="{{ __('Email') }}" required autofocus>
                             @error('email')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
                         <div class="input-group mb-4"><span class="input-group-text">
-                      <svg class="icon">
-                        <use xlink:href="{{ asset('icons/coreui.svg#cil-lock-locked') }}"></use>
-                      </svg></span>
+                                <svg class="icon">
+                                    <use xlink:href="{{ asset('icons/coreui.svg#cil-lock-locked') }}"></use>
+                                </svg></span>
                             <input class="form-control @error('password') is-invalid @enderror" type="password"
-                                   name="password"
-                                   placeholder="{{ __('Password') }}" required>
+                                name="password" placeholder="{{ __('Senha') }}" required>
                             @error('password')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
                         <div class="row">
                             <div class="col-6">
-                                <button class="btn btn-primary px-4" type="submit">{{ __('Login') }}</button>
+                                <button class="btn btn-primary px-4" type="submit">{{ __('Entrar') }}</button>
                             </div>
                             @if (Route::has('password.request'))
                                 <div class="col-6 text-end">
                                     <a href="{{ route('password.request') }}" class="btn btn-link px-0"
-                                       type="button">{{ __('Forgot Your Password?') }}</a>
+                                        type="button">{{ __('Esqueceu a senha?') }}</a>
                                 </div>
                             @endif
                         </div>
@@ -50,9 +49,9 @@
             <div class="card col-md-5 text-white bg-primary py-5">
                 <div class="card-body text-center">
                     <div>
-                        <h2>{{ __('Sign up') }}</h2>
+                        <h2>{{ __('Cadastrar') }}</h2>
                         <a href="{{ route('register') }}"
-                           class="btn btn-lg btn-outline-light mt-3">{{ __('Register') }}</a>
+                            class="btn btn-lg btn-outline-light mt-3">{{ __('Novo usuário') }}</a>
                     </div>
                 </div>
             </div>
