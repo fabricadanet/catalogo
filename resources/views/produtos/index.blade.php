@@ -17,10 +17,49 @@
 
         </div>
 
-        <div class="alert alert-info" role="alert">Sample table page</div>
+
 
         <div class="card-body">
-            Produtos
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="d-flex justify-content-center align-items-end" scope="col">Imagem</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Preço</th>
+                    <th scope="col">Quantidade</th>
+                    <th scope="col">Categoria</th>
+                    <th scope="col">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                @foreach ($produtos as $produto)
+                    <tr>
+                        <td class="text-center">
+                                <img style=" width: 50px;" src="{{asset('imagem/produtos/'.$produto->image ) }}" alt="">
+                        </td>
+                        <td class="">{{ $produto->nome }}
+                        </td>
+                        <td class="">{{ $produto->descricao }}</td>
+                        <td class="">{{ $produto->preco }}</td>
+                        <td class="">{{ $produto->quantidade }}</td>
+                        <td class="">{{ $produto->categoria->nome }}</td>
+                        <td class="">
+                            <a href="{{ route('produtos.edit', $produto->id) }}" class="btn btn-primary btn-sm">
+                                {{ __('Editar') }}
+                            </a>
+                            <form action="{{ route('produtos.destroy', $produto->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm">
+                                    {{ __('Excluir') }}
+                                </button>
+                            </form>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
 
         </div>
 

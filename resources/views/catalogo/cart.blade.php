@@ -4,66 +4,69 @@
          <div class="col-md-10 col-lg-8 order-md-last">
              <h4 class="d-flex justify-content-between align-items-center mb-3">
                  <span class="text-primary">Seu carrinho</span>
-                 <span class="badge bg-primary rounded-pill">3</span>
-             </h4>
+                 <span class="badge bg-primary rounded-pill">{{count($carrinho)}}</span>
 
+             </h4>
+             <div>
+                 @if(session()->has('success'))
+                     <div class="alert alert-success">
+                         {{ session()->get('success') }}
+                     </div>
+                 @elseif(session()->has('error'))
+                     <div class="alert alert-danger">
+                         {{session()->get('error')}}
+                     </div>
+                 @endif
+             </div>
 
              <div class="row">
                  <div class="container mb-4">
                      <div class="col-12">
-                         <div class="table-responsive">
-                             <table class="table table-striped">
-                                 <thead>
+                         @if( $carrinho != null)
+                             <div class="table-responsive">
+                                 <table class="table table-striped">
+                                     <thead>
                                      <tr>
                                          <th scope="col"> </th>
                                          <th scope="col">Produto</th>
                                          <th scope="col" class="text-center">Quant.</th>
                                          <th scope="col"></th>
                                          <th scope="col" class="text-right">Preço</th>
-                                         <th scope="col"> </th>
+                                         <th scope="col">Sub-total </th>
                                      </tr>
-                                 </thead>
-                                 <tbody>
-                                     <tr>
-                                         <td><img src="https://dummyimage.com/50x50/55595c/fff" /> </td>
-                                         <td>Product Name Dada</td>
+                                     </thead>
+                                     <tbody>
 
-                                         <td><input class="form-control" type="number" min="0" value="1"
-                                                 oninput="validity.valid||(value='');" /></td>
-                                         <td></td>
-                                         <td class="text-right"> 124,90</td>
-                                         <td class="text-right"><button class="btn btn-sm btn-danger"><i
-                                                     class="bi bi-trash"></i> </button> </td>
-                                     </tr>
-                                     <tr>
-                                         <td><img src="https://dummyimage.com/50x50/55595c/fff" /> </td>
-                                         <td>Product Name Toto</td>
+                                     @foreach($carrinho as $produto)
+                                         <tr>
+                                             <td><img style="max-height: 50px" src="{{asset('imagem/produtos/'.$produto['image'])}}" /> </td>
+                                             <td>{{$produto["nome"]}}</td>
+                                             <form method="POST" action="{{route('carrinho.update')}}">
+                                                 @csrf
+                                                 <input type="hidden" name="id" value="{{$produto['id']}}">
+                                                 <td><input id= "quantidade" class="form-control" type="number" name="quantidade" min="1" value="{{$produto["quantidade"]?:1}}" name="quantidade"></td>
 
-                                         <td><input class="form-control" type="number" min="0" value="1"
-                                                 oninput="validity.valid||(value='');" /></td>
-                                         <td></td>
-                                         <td class="text-right">33,90 </td>
-                                         <td class="text-right"><button class="btn btn-sm btn-danger"><i
-                                                     class="bi bi-trash"></i> </button> </td>
-                                     </tr>
-                                     <tr>
-                                         <td><img src="https://dummyimage.com/50x50/55595c/fff" /> </td>
-                                         <td>Product Name Titi</td>
+                                                 <td class="text-right"><button type="submit" class="btn btn-sm btn-ghost-primary"><i
+                                                             class="bi bi-arrow-clockwise"></i> </button>
+                                                 </td>
+                                                 <td class="text-right" id="preco">@money($produto["preco"], 'BRL')</td>
+                                             </form>
+                                             <td class="tex-right" id="subTotal" name="subTotal">@money($produto["quantidade"]*$produto["preco"],'BRL')</td>
 
-                                         <td><input class="form-control" type="number" min="0" value="1"
-                                                 oninput="validity.valid||(value='');" /></td>
-                                         <td></td>
-                                         <td class="text-right">70,00 </td>
-                                         <td class="text-right"><button class="btn btn-sm btn-danger"><i
-                                                     class="bi bi-trash"></i> </button> </td>
-                                     </tr>
+                                             <td class="text-right"><a href="{{route('carrinho.remove',['id'=>$produto["id"]])}}" class="btn btn-sm btn-danger"><i
+                                                         class="bi bi-trash"></i> </a>
+                                             </td>
+
+                                             <input type="hidden" name="subTotal" value="{{$subTotal+= $produto["quantidade"]*$produto["preco"]}}">
+                                         </tr>
+                                     @endforeach
                                      <tr>
                                          <td></td>
                                          <td></td>
                                          <td></td>
                                          <td></td>
                                          <td>Sub-Total</td>
-                                         <td class="text-right">R$ 255,90</td>
+                                         <td class="text-right">@money($subTotal,'BRL')</td>
                                      </tr>
                                      <tr>
                                          <td></td>
@@ -71,7 +74,8 @@
                                          <td></td>
                                          <td></td>
                                          <td>Frete</td>
-                                         <td class="text-right">R$ 6,90</td>
+                                         <td class="text-right">@money($frete,'BRL')</td>
+                                         <td></td>
                                      </tr>
                                      <tr>
                                          <td></td>
@@ -79,11 +83,21 @@
                                          <td></td>
                                          <td></td>
                                          <td><strong>Total</strong></td>
-                                         <td class="text-right"><strong>R$ 346,90</strong></td>
+                                         <td class="text-right"><strong>@money($total=$subTotal+$frete,'BRL')</strong></td>
+                                         <td></td>
                                      </tr>
-                                 </tbody>
-                             </table>
-                         </div>
+                                     </tbody>
+                                 </table>
+                             </div>
+
+                         @else
+                             <div class="col-md-12">
+                                 <div class="alert alert-warning">
+                                     <h4>Não há produtos no carrinho</h4>
+                                 </div>
+                             </div>
+                         @endif
+
                      </div>
                      <div class=" mb-2">
                          <div class="row">
@@ -99,8 +113,8 @@
                      </div>
                  </div>
              </div>
-
          </div>
      </div>
      @include('catalogo.checkout-modal')
+
  @endsection

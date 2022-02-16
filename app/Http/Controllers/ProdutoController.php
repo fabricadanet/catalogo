@@ -15,8 +15,11 @@ class ProdutoController extends Controller
      */
     public function index()
     {
+        $carrinho = session()->get('carrinho');
+        if ($carrinho == null)
+            $carrinho = [];
         $produtos = Produto::paginate(10);
-        return view('produtos.index', compact('produtos'));
+        return view('produtos.index', compact('produtos', 'carrinho'));
     }
 
     /**
@@ -38,7 +41,15 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        if($request->hasFile('image') && $request->file('image')->isValid()){
+            $requestImage = $request->file('image');
+            $imageName = "prod_".strtotime('now')."_".$request->image->getClientOriginalName();
+            $requestImage->move(public_path('imagem/produtos'), $imageName);
+            $data['image'] = $imageName;
+        }
+        Produto::create($data);
+        return redirect()->route('produtos.index');
     }
 
     /**
@@ -47,9 +58,10 @@ class ProdutoController extends Controller
      * @param  \App\Models\Produto  $produto
      * @return \Illuminate\Http\Response
      */
-    public function show(Produto $produto)
+    public function show($id)
     {
-        //
+        $produto = Produto::find($id);
+        return view('produtos.show', compact('produto'));
     }
 
     /**
@@ -58,9 +70,11 @@ class ProdutoController extends Controller
      * @param  \App\Models\Produto  $produto
      * @return \Illuminate\Http\Response
      */
-    public function edit(Produto $produto)
+    public function edit($id)
     {
-        //
+        $produto = Produto::find($id);
+        $categorias = Categoria::all();
+        return view('produtos.edit', compact('produto', 'categorias'));
     }
 
     /**
@@ -70,9 +84,11 @@ class ProdutoController extends Controller
      * @param  \App\Models\Produto  $produto
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Produto $produto)
+    public function update(Request $request, $id)
     {
-        //
+        $produto=Produto::find($id);
+        $produto->update($request->all());
+        return redirect()->route('produtos.index');
     }
 
     /**
@@ -81,8 +97,10 @@ class ProdutoController extends Controller
      * @param  \App\Models\Produto  $produto
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Produto $produto)
+    public function destroy($id)
     {
-        //
+        $produto = Produto::find($id);
+        $produto->delete();
+        return  redirect()->route('produtos.index');
     }
 }

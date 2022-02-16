@@ -14,9 +14,9 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        $categorias = Categoria::paginate(10);
+        $categorias = Categoria::all();
 
-        return view('categorias.index', compact('categorias'));
+        return view('categorias.index', ['categorias'=>$categorias]);
     }
 
     /**
@@ -37,7 +37,15 @@ class CategoriaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        if($request->hasFile('image') && $request->file('image')->isValid()){
+            $requestImage = $request->file('image');
+            $imageName = "cat_".strtotime('now')."_".$request->image->getClientOriginalName();
+            $requestImage->move(public_path('imagem/categorias'), $imageName);
+            $data['image'] = $imageName;
+        }
+        Categoria::create($data);
+       return redirect()->route('categorias.index');
     }
 
     /**
@@ -46,9 +54,10 @@ class CategoriaController extends Controller
      * @param  \App\Models\Categoria  $Categoria
      * @return \Illuminate\Http\Response
      */
-    public function show(Categoria $Categoria)
+    public function show($id)
     {
-        //
+        $categoria = Categoria::find($id);
+        return view('categorias.show', ['categoria'=>$categoria]);
     }
 
     /**
@@ -57,9 +66,10 @@ class CategoriaController extends Controller
      * @param  \App\Models\Categoria  $Categoria
      * @return \Illuminate\Http\Response
      */
-    public function edit(Categoria $Categoria)
+    public function edit($id)
     {
-        //
+        $categoria = Categoria::find($id);
+        return view('categorias.edit', ['categoria'=>$categoria]);
     }
 
     /**
@@ -69,9 +79,11 @@ class CategoriaController extends Controller
      * @param  \App\Models\Categoria  $Categoria
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Categoria $Categoria)
+    public function update(Request $request, $id)
     {
-        //
+        $categoria = Categoria::find($id);
+        $categoria->update($request->all());
+        return redirect()->route('categorias.index');
     }
 
     /**
@@ -80,8 +92,10 @@ class CategoriaController extends Controller
      * @param  \App\Models\Categoria  $Categoria
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Categoria $Categoria)
+    public function destroy($id)
     {
-        //
+        $categoria = Categoria::find($id);
+        $categoria->delete();
+        return redirect()->route('categorias.index');
     }
 }

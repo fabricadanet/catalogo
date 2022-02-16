@@ -32,7 +32,9 @@
                <div class="d-flex">
                    <a class="btn btn-outline-dark" href="{{ route('catalogo.carrinho') }}">
                        <i class="bi-cart-fill me-1"></i>
-                       <span class="badge bg-dark text-white ms-1 rounded-pill">3</span>
+                       <span class="badge bg-dark text-white ms-1 rounded-pill" id="#items-in-cart">
+                          {{ session()->has('carrinho')>0?count(session('carrinho')):0 }}
+                       </span>
                    </a>
                </div>
            </div>

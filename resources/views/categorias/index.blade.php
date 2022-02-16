@@ -21,32 +21,33 @@
 
         <div class="card-body">
 
-            <table class="table">
-                <thead>
+                <table class="table">
+                    <thead>
                     <tr>
-                        <th class="d-flex justify-content-center align-items-end" scope="col">Imagem</th>
-                        <th scope="col">Nome</th>
+                        <th class="text-center">Imagem</th>
+                        <th class="">Nome</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
+
                     @foreach ($categorias as $categoria)
                         <tr>
-                            <td class="d-flex justify-content-center align-items-end"><img style=" width: 100px;"
-                                    src="{{ $categoria->image }}" alt="">
+                            <td class="text-center">
+                                <img style=" width: 50px;" src="{{asset('imagem/categorias/'. $categoria->image )}}" alt="">
                             </td>
-
+                            <td class="">{{ $categoria->nome }}
                             </td>
-
-                            <td lass="d-flex justify-content-center align-items-start">{{ $categoria->nome }}</td>
                         </tr>
                     @endforeach
-                </tbody>
-            </table>
-
+                    </tbody>
+                </table>
         </div>
 
-        <div class="card-footer">
-            {{ $categorias->links() }}
-        </div>
+
     </div>
+
+
+
+
+
 @endsection

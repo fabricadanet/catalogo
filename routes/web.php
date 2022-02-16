@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\models\Produto;
 use \App\Http\Controllers\{
     CategoriaController,
     ProdutoController,
@@ -9,7 +10,8 @@ use \App\Http\Controllers\{
     HomeController,
     VendaController,
     ClienteController,
-    ContatoController
+    ContatoController,
+    CartController
 
 };
 
@@ -26,7 +28,8 @@ use \App\Http\Controllers\{
 */
 
 Route::get('/', function () {
-    return view('catalogo.index');
+   $produtos= Produto::all();
+    return view('catalogo.index', compact('produtos'));
 })->name('catalogo.index');
 
 Route::get('sobre', function () {
@@ -44,16 +47,17 @@ Route::get('contato', function () {
 Route::get('categorias', function () {
     return view('catalogo.category');
 })->name('catalogo.categorias');
-Route::get('carrinho', function () {
-    return view('catalogo.cart');
-})->name('catalogo.carrinho');
+Route::get('carrinho', [CartController::class,'viewCart'])->name('catalogo.carrinho');
+Route::post('carrinho/update', [CartController::class,'update'])->name('carrinho.update');
 Route::get('checkout', function () {
     return view('catalogo.checkout');
 })->name('catalogo.checkout');
 Route::get('produto-detalhe', function () {
     return view('catalogo.product-detail');
 })->name('catalogo.produto-detalhe');
-
+Route::post('carrinho',[CartController::class, 'addToCart'])->name('carrinho.add');
+Route::get('carrinho/remove/{id}', [CartController::class, 'remove'])->name('carrinho.remove');
+Route::post('carrinho/finalizar', [CartController::class, 'finalizarCompra'])->name('carrinho.finalizar');
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -65,11 +69,11 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::resource('categorias', CategoriaController::class);
+
     Route::resource('produtos', ProdutoController::class);
     Route::get('vendas/abertas', [VendaController::class, 'abertas'])->name('vendas.open');
     Route::get('vendas/fechadas', [VendaController::class, 'fechadas'])->name('vendas.closed');
     Route::get('clientes', [ClienteController::class, 'index'])->name('clientes.index');
     Route::get('contatos', [ContatoController::class, 'index'])->name('contatos.index');
-
+    Route::resource('categorias', CategoriaController::class);
 });

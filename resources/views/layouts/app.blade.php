@@ -80,7 +80,7 @@
         </div>
         <footer class="footer">
             <div>
-                <p class="m-0 text-center text-dark">Copyright &copy; Feito com &hearts; pela fabricadanet.top 2021</p>
+                <p class="m-0 text-center text-dark">Copyright &copy;2022 Feito com &hearts; pela fabricadanet.com.br </p>
             </div>
         </footer>
     </div>
